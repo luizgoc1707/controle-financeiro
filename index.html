@@ -1,778 +1,131 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle Financeiro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <style>
-    /* ===== VARIÁVEIS DE CORES ===== */
-    :root {
-      --primary: #4361ee;
-      --primary-light: #4895ef;
-      --primary-dark: #3a0ca3;
-      --secondary: #4cc9f0;
-      --accent: #f72585;
-      --expense: #ff6b6b;
-      --background: #f8f9fa;
-      --card-bg: #ffffff;
-      --text: #2b2d42;
-      --text-light: #8d99ae;
-      --success: #4ade80;
-      --warning: #fbbf24;
-      --danger: #f87171;
-    }
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
 
-    /* ===== RESET E ESTILOS GERAIS ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      line-height: 1.6;
-      /* Espaço inferior para que o conteúdo não fique oculto sob o menu fixo */
-      padding-bottom: 72px; /* Aproximadamente a altura do .bottom-nav */
-    }
-
-    h1, h2, h3 {
-      color: var(--primary-dark);
-      font-weight: 600;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 10px 0 20px;
-    }
-
-    /* ===== CONTAINER PRINCIPAL ===== */
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      background: var(--background);
-    }
-
-    /* ===== RESUMO MÊS ===== */
-    .resumo-container {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .resumo-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      width: 100%;
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      text-align: left;
-      color: var(--text);
-      border-left: 4px solid var(--primary);
-    }
-
-    .card:nth-child(2) {
-      border-left-color: var(--expense);
-    }
-
-    .card:nth-child(3) {
-      border-left-color: var(--primary-dark);
-    }
-
-    .card-title {
-      font-size: 14px;
-      color: var(--text-light);
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    .card-value {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    /* ===== MODAL SALÁRIOS ===== */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal.oculto {
-      display: none !important;
-    }
-
-    .modal-content {
-      background-color: var(--card-bg);
-      padding: 24px;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 400px;
-      color: var(--text);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .modal-content h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
-
-    .modal-content input,
-    .modal-content select,
-    .modal-content textarea,
-    .modal-content button {
-      width: 100%;
-      padding: 14px 16px;
-      margin-top: 12px;
-      border: 1px solid rgba(67, 97, 238, 0.2);
-      border-radius: 10px;
-      font-size: 16px;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .modal-content input,
-    .modal-content select,
-    .modal-content textarea {
-      background: var(--card-bg);
-      color: var(--text);
-      border: 1px solid rgba(67, 97, 238, 0.3);
-    }
-
-    .modal-content input:focus,
-    .modal-content select:focus,
-    .modal-content textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-    }
-
-    .modal-content button {
-      background: linear-gradient(to right, var(--primary), var(--primary-light));
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      border: none;
-      margin-top: 16px;
-    }
-
-    .modal-content button:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-    }
-
-    .modal-content button.secondary {
-      background: white;
-      color: var(--primary);
-      border: 1px solid var(--primary);
-    }
-
-    /* ===== GRID SALÁRIOS ===== */
-    .salary-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      margin: 20px 0 10px;
-      padding: 12px 10px;
-      background-color: rgba(67, 97, 238, 0.05);
-      border-radius: 10px;
-      font-size: 14px;
-      color: var(--primary-dark);
-      font-weight: 600;
-    }
-
-    .salary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 10px;
-      margin: 8px 0;
-      background: var(--card-bg);
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .salary-grid span {
-      font-size: 14px;
-      color: var(--text);
-    }
-
-    .btn-icon {
-      background: transparent;
-      color: var(--danger);
-      font-size: 20px;
-      border: none;
-      cursor: pointer;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .btn-icon:hover {
-      background: rgba(248, 113, 113, 0.1);
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .pagination button {
-      flex: 1;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    /* ===== MODAL MOBILE (DESPESA E BACKUP) ===== */
-    .modal-mobile {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 85%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      z-index: 1000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-mobile.oculto {
-      display: none !important;
-    }
-
-    .modal-mobile-content {
-      background-color: var(--card-bg);
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      width: 100%;
-      max-width: 500px;
-      color: var(--text);
-      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
-      overflow-y: auto;
-      max-height: 100%;
-      padding: 24px 20px;
-      animation: slideUp 0.3s ease-out;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .modal-mobile-content h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
-
-    .modal-mobile-content input,
-    .modal-mobile-content select,
-    .modal-mobile-content textarea,
-    .modal-mobile-content button {
-      width: 100%;
-      padding: 14px 16px;
-      margin-top: 12px;
-      border: 1px solid rgba(67, 97, 238, 0.2);
-      border-radius: 10px;
-      font-size: 16px;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .modal-mobile-content input,
-    .modal-mobile-content select,
-    .modal-mobile-content textarea {
-      background: var(--card-bg);
-      color: var(--text);
-      border: 1px solid rgba(67, 97, 238, 0.3);
-    }
-
-    .modal-mobile-content button {
-      background: linear-gradient(to right, var(--primary), var(--primary-light));
-      color: white;
-      cursor: pointer;
-      font-weight: 600;
-      border: none;
-      margin-top: 16px;
-    }
-
-    .modal-mobile-content button:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-    }
-
-    /* ===== GRID DESPESAS ===== */
-    .expense-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      margin: 20px 0 10px;
-      padding: 12px 10px;
-      background-color: rgba(67, 97, 238, 0.05);
-      border-radius: 10px;
-      font-size: 14px;
-      color: var(--primary-dark);
-      font-weight: 600;
-    }
-
-    .expense-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 10px;
-      margin: 8px 0;
-      background: var(--card-bg);
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .expense-grid span {
-      font-size: 14px;
-      color: var(--text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    /* ===== NAVEGAÇÃO INFERIOR FIXA ===== */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      background-color: white;
-      padding: 12px 0;
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02);
-      z-index: 1000;
-    }
-
-    .bottom-nav button {
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      padding: 8px;
-    }
-
-    .bottom-nav button .material-icons-round {
-      font-size: 24px;
-    }
-
-    .bottom-nav button.active {
-      color: var(--primary);
-      font-weight: 500;
-    }
-
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(67, 97, 238, 0.1);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(67, 97, 238, 0.3);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
-    }
-  </style>
-</head>
-<body>
-  <!-- Conteúdo Principal (Resumo do Mês) -->
-  <div class="main-content">
-    <div id="telaResumo">
-      <h1 id="tituloResumo">Despesas do Mês</h1>
-      <div class="resumo-container">
-        <div class="resumo-cards">
-          <div class="card">
-            <div class="card-title">Receitas</div>
-            <div class="card-value" id="incomeValue">R$ 0,00</div>
-          </div>
-          <div class="card">
-            <div class="card-title">Despesas</div>
-            <div class="card-value" id="expenseValue">R$ 0,00</div>
-          </div>
-          <div class="card">
-            <div class="card-title">Saldo</div>
-            <div class="card-value" id="totalValue">R$ 0,00</div>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-[#121416] dark justify-between group/design-root overflow-x-hidden"
+      style='font-family: Inter, "Noto Sans", sans-serif;'
+    >
+      <div>
+        <div class="flex items-center bg-[#121416] p-4 pb-2 justify-between">
+          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12">Overview</h2>
+          <div class="flex w-12 items-center justify-end">
+            <button
+              class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+            >
+              <div class="text-white" data-icon="Gear" data-size="24px" data-weight="regular">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                  <path
+                    d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"
+                  ></path>
+                </svg>
+              </div>
+            </button>
           </div>
         </div>
-        <div class="resumo-cards">
-          <div class="card">
-            <div class="card-title">Saldo Final</div>
-            <div class="card-value" id="saldo">R$ 0,00</div>
+        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Current Balance</h3>
+        <h1 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">$12,345.67</h1>
+        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">This Month</h3>
+        <div class="flex flex-wrap gap-4 p-4">
+          <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035]">
+            <p class="text-white text-base font-medium leading-normal">Income</p>
+            <p class="text-white tracking-light text-2xl font-bold leading-tight">$2,500.00</p>
+            <p class="text-[#0bda5e] text-base font-medium leading-normal">+10%</p>
           </div>
-          <div class="card">
-            <div class="card-title">Livre pra torrar</div>
-            <div class="card-value" id="torrar">R$ 0,00</div>
+          <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035]">
+            <p class="text-white text-base font-medium leading-normal">Expenses</p>
+            <p class="text-white tracking-light text-2xl font-bold leading-tight">$1,800.00</p>
+            <p class="text-[#fa6238] text-base font-medium leading-normal">-5%</p>
+          </div>
+        </div>
+        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Spending by Category</h3>
+        <div class="flex flex-wrap gap-4 px-4 py-6">
+          <div class="flex min-w-72 flex-1 flex-col gap-2">
+            <p class="text-white text-base font-medium leading-normal">Spending</p>
+            <p class="text-white tracking-light text-[32px] font-bold leading-tight truncate">$1,800</p>
+            <p class="text-[#a2aab3] text-base font-normal leading-normal">This Month</p>
+            <div class="grid min-h-[180px] gap-x-4 gap-y-6 grid-cols-[auto_1fr] items-center py-3">
+              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Food</p>
+              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
+              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Transportation</p>
+              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 40%;"></div></div>
+              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Entertainment</p>
+              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 30%;"></div></div>
+              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Bills</p>
+              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
+              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Others</p>
+              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 60%;"></div></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal Salários (centro da tela) -->
-  <div id="modalSalarios" class="modal oculto">
-    <div class="modal-content">
-      <h2>Gerenciar Salários</h2>
-      <select id="pessoaSalario">
-        <option value="Luiz Gustavo">Luiz Gustavo</option>
-        <option value="Janaina">Janaina</option>
-      </select>
-      <input type="month" id="mesAnoSalario">
-      <input type="number" id="novoSalario" placeholder="Valor do salário">
-      <button onclick="adicionarSalario()">Adicionar salário</button>
-      <button class="secondary" onclick="copiarUltimoMes()">📋 Copiar último mês</button>
-      <input type="number" id="filterAnoSalario" placeholder="Filtrar por ano (YYYY)" oninput="atualizarSalários()">
-
-      <div class="salary-header">
-        <span>Salário de</span>
-        <span>Mês Ref.</span>
-        <span>Valor</span>
-        <span>#</span>
+      <div>
+        <div class="flex gap-2 border-t border-[#2c3035] bg-[#1e2124] px-4 pb-3 pt-2">
+          <a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
+            <div class="text-white flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="fill">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-white text-xs font-medium leading-normal tracking-[0.015em]">Overview</p>
+          </a>
+          <a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#a2aab3]" href="#">
+            <div class="text-[#a2aab3] flex h-8 items-center justify-center" data-icon="ListBullets" data-size="24px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-[#a2aab3] text-xs font-medium leading-normal tracking-[0.015em]">Transactions</p>
+          </a>
+          <a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#a2aab3]" href="#">
+            <div class="text-[#a2aab3] flex h-8 items-center justify-center" data-icon="ChartBar" data-size="24px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-[#a2aab3] text-xs font-medium leading-normal tracking-[0.015em]">Budget</p>
+          </a>
+          <a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#a2aab3]" href="#">
+            <div class="text-[#a2aab3] flex h-8 items-center justify-center" data-icon="Trophy" data-size="24px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M232,64H208V56a16,16,0,0,0-16-16H64A16,16,0,0,0,48,56v8H24A16,16,0,0,0,8,80V96a40,40,0,0,0,40,40h3.65A80.13,80.13,0,0,0,120,191.61V216H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16H136V191.58c31.94-3.23,58.44-25.64,68.08-55.58H208a40,40,0,0,0,40-40V80A16,16,0,0,0,232,64ZM48,120A24,24,0,0,1,24,96V80H48v32q0,4,.39,8Zm144-8.9c0,35.52-28.49,64.64-63.51,64.9H128a64,64,0,0,1-64-64V56H192ZM232,96a24,24,0,0,1-24,24h-.5a81.81,81.81,0,0,0,.5-8.9V80h24Z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-[#a2aab3] text-xs font-medium leading-normal tracking-[0.015em]">Goals</p>
+          </a>
+          <a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#a2aab3]" href="#">
+            <div class="text-[#a2aab3] flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-[#a2aab3] text-xs font-medium leading-normal tracking-[0.015em]">Profile</p>
+          </a>
+        </div>
+        <div class="h-5 bg-[#1e2124]"></div>
       </div>
-      <div id="listaSalarios"></div>
-
-      <div class="pagination">
-        <button id="prevSalario" onclick="mudarPáginaSalário(-1)">Anterior</button>
-        <button id="nextSalario" onclick="mudarPáginaSalário(1)">Próximo</button>
-      </div>
-      <button class="secondary" onclick="fecharModalSalários()">Fechar</button>
     </div>
-  </div>
-
-  <!-- Modal Despesa (mobile bottom-sheet) -->
-  <div id="modalDespesa" class="modal-mobile oculto">
-    <div class="modal-mobile-content">
-      <h2>Nova Despesa</h2>
-      <input type="text" id="descricaoDespesa" placeholder="Descrição">
-      <select id="tipoDespesa">
-        <option value="variavel">Variável</option>
-        <option value="fixa">Fixa</option>
-        <option value="parcelada">Parcelada</option>
-      </select>
-      <input type="number" id="valorDespesa" placeholder="Valor">
-      <button onclick="salvarDespesa()">Salvar</button>
-
-      <div class="expense-header">
-        <span>Descrição</span>
-        <span>Tipo</span>
-        <span>Valor</span>
-        <span>#</span>
-      </div>
-      <div id="listaDespesas"></div>
-
-      <div class="pagination">
-        <button id="prevDespesa" onclick="mudarPáginaDespesa(-1)">Anterior</button>
-        <button id="nextDespesa" onclick="mudarPáginaDespesa(1)">Próximo</button>
-      </div>
-      <button class="secondary" onclick="fecharModalDespesa()">Fechar</button>
-    </div>
-  </div>
-
-  <!-- Modal Backup (mobile bottom-sheet) -->
-  <div id="modalBackup" class="modal-mobile oculto">
-    <div class="modal-mobile-content">
-      <h2>Backup</h2>
-      <textarea id="campoBackup" rows="10" placeholder="Cole o JSON aqui…"></textarea>
-      <button onclick="gerarBackup()">Gerar Backup</button>
-      <button onclick="restaurarBackup()">Restaurar Backup</button>
-      <button class="secondary" onclick="fecharModalBackup()">Fechar</button>
-    </div>
-  </div>
-
-  <!-- Navegação Inferior (Fixa) -->
-  <div class="bottom-nav">
-    <button id="btnResumo" class="active" onclick="ativarSecao('resumo')">
-      <span class="material-icons-round">home</span>
-      <span>Início</span>
-    </button>
-    <button id="btnSalario" onclick="ativarSecao('salário')">
-      <span class="material-icons-round">payments</span>
-      <span>Salários</span>
-    </button>
-    <button id="btnDespesa" onclick="ativarSecao('despesa')">
-      <span class="material-icons-round">shopping_bag</span>
-      <span>Despesas</span>
-    </button>
-    <button id="btnBackup" onclick="ativarSecao('backup')">
-      <span class="material-icons-round">settings</span>
-      <span>Config</span>
-    </button>
-  </div>
-
-<script>
-  // === DADOS INICIAIS ===
-  let despesas = JSON.parse(localStorage.getItem("despesas") || "[]");
-  let salários = JSON.parse(localStorage.getItem("salários") || "[]");
-
-  // === PAGINAÇÃO ===
-  let páginaAtualSalário = 1;
-  const ítensPorPáginaSalário = 5;
-  let páginaAtualDespesa = 1;
-  const ítensPorPáginaDespesa = 5;
-
-  // Retorna mês corrente e ano
-  function mêsCorrente() {
-    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    const hoje = new Date();
-    return {
-      nome: meses[hoje.getMonth()],
-      ano: hoje.getFullYear(),
-      mesNúmero: (hoje.getMonth() + 1).toString().padStart(2, '0')
-    };
-  }
-
-  // Atualiza título e valores do resumo conforme mês corrente
-  function atualizarResumo() {
-    const { nome, ano, mesNúmero } = mêsCorrente();
-    document.getElementById('tituloResumo').textContent = `Despesas do Mês de ${nome}/${ano}`;
-
-    const chaveMes = `${ano}-${mesNúmero}`;
-
-    // Filtrar receitas (salários) do mês corrente
-    const receitasDoMês = salários.filter(s => s.mesAno === chaveMes);
-    const totalReceitas = receitasDoMês.reduce((soma, s) => soma + s.valor, 0);
-
-    // Filtrar despesas do mês corrente
-    const despesasDoMês = despesas.filter(d => d.mesAno === chaveMes);
-    const totalDespesas = despesasDoMês.reduce((soma, d) => soma + d.valor, 0);
-
-    const balanço = totalReceitas - totalDespesas;
-
-    document.getElementById('incomeValue').textContent = `R$ ${totalReceitas.toFixed(2).replace('.', ',')}`;
-    document.getElementById('expenseValue').textContent = `R$ ${totalDespesas.toFixed(2).replace('.', ',')}`;
-    document.getElementById('totalValue').textContent = `R$ ${balanço.toFixed(2).replace('.', ',')}`;
-    document.getElementById('saldo').textContent = `R$ ${balanço.toFixed(2).replace('.', ',')}`;
-    document.getElementById('torrar').textContent = `R$ ${balanço.toFixed(2).replace('.', ',')}`;
-  }
-
-  // === CONTROLE DE SEÇÕES / NAVEGAÇÃO ===
-  function ativarSecao(secao) {
-    document.getElementById('telaResumo').style.display = (secao === 'resumo') ? 'block' : 'none';
-    if (secao === 'salário') abrirModalSalários();
-    if (secao === 'despesa') abrirModalDespesa();
-    if (secao === 'backup') abrirModalBackup();
-    ['btnResumo','btnSalario','btnDespesa','btnBackup'].forEach(id => document.getElementById(id).classList.remove('active'));
-    if (secao === 'resumo') document.getElementById('btnResumo').classList.add('active');
-    if (secao === 'salário') document.getElementById('btnSalario').classList.add('active');
-    if (secao === 'despesa') document.getElementById('btnDespesa').classList.add('active');
-    if (secao === 'backup') document.getElementById('btnBackup').classList.add('active');
-  }
-
-  // === MODAL SALÁRIOS ===
-  function abrirModalSalários() {
-    document.getElementById("modalSalarios").classList.remove("oculto");
-    páginaAtualSalário = 1;
-    atualizarSalários();
-  }
-  function fecharModalSalários() {
-    document.getElementById("modalSalarios").classList.add("oculto");
-    ativarSecao('resumo');
-    atualizarResumo();
-  }
-  function atualizarSalários() {
-    const lista = document.getElementById("listaSalarios");
-    lista.innerHTML = "";
-    const filtroAno = document.getElementById("filterAnoSalario").value;
-    let filtrados = salários;
-    if (filtroAno) filtrados = filtrados.filter(s => s.mesAno.startsWith(filtroAno));
-    filtrados.sort((a, b) => b.mesAno.localeCompare(a.mesAno));
-    const totalPáginas = Math.ceil(filtrados.length / ítensPorPáginaSalário) || 1;
-    if (páginaAtualSalário > totalPáginas) páginaAtualSalário = totalPáginas;
-    if (páginaAtualSalário < 1) páginaAtualSalário = 1;
-    const início = (páginaAtualSalário - 1) * ítensPorPáginaSalário;
-    const fim = início + ítensPorPáginaSalário;
-    const itens = filtrados.slice(início, fim);
-    itens.forEach((item, idx) => {
-      const linha = document.createElement("div");
-      linha.classList.add("salary-grid");
-      const [anoRef, mesRef] = item.mesAno.split("-");
-      linha.innerHTML = `
-        <span>${item.nome}</span>
-        <span>${mesRef}/${anoRef}</span>
-        <span>R$ ${item.valor.toFixed(2).replace('.', ',')}</span>
-        <button class="btn-icon" onclick="removerSalário(${início + idx})">✖</button>
-      `;
-      lista.appendChild(linha);
-    });
-    document.getElementById("prevSalario").disabled = (páginaAtualSalário === 1);
-    document.getElementById("nextSalario").disabled = (páginaAtualSalário === totalPáginas);
-  }
-  function mudarPáginaSalário(delta) { páginaAtualSalário += delta; atualizarSalários(); }
-  function adicionarSalario() {
-    const nome = document.getElementById("pessoaSalario").value;
-    const mesAno = document.getElementById("mesAnoSalario").value;
-    const valor = parseFloat(document.getElementById("novoSalario").value);
-    if (!nome || !mesAno || isNaN(valor)) return alert("Preencha todos os campos.");
-    salários.push({ nome, mesAno, valor });
-    localStorage.setItem("salários", JSON.stringify(salários));
-    document.getElementById("novoSalario").value = "";
-    atualizarSalários();
-  }
-  function removerSalário(index) {
-    salários.splice(index, 1);
-    localStorage.setItem("salários", JSON.stringify(salários));
-    atualizarSalários();
-  }
-  function copiarUltimoMes() {
-    if (!salários.length) return alert("Não há salários registrados para copiar.");
-    const mesesUnicos = Array.from(new Set(salários.map(s => s.mesAno))).sort();
-    const mesRef = mesesUnicos[mesesUnicos.length - 1];
-    const [anoRef, mesRefN] = mesRef.split("-");
-    let anoNovo = parseInt(anoRef, 10);
-    let mesNovo = parseInt(mesRefN, 10) + 1;
-    if (mesNovo > 12) { mesNovo = 1; anoNovo += 1; }
-    const mesAtual = `${anoNovo.toString().padStart(4, '0')}-${mesNovo.toString().padStart(2, '0')}`;
-    const refSalários = salários.filter(s => s.mesAno === mesRef);
-    const existentes = salários.filter(s => s.mesAno === mesAtual).map(s => s.nome);
-    const novos = refSalários.filter(s => !existentes.includes(s.nome)).map(s => ({ nome: s.nome, mesAno: mesAtual, valor: s.valor }));
-    if (!novos.length) return alert("Todos os salários do próximo mês já existem ou não podem ser copiados.");
-    salários = salários.concat(novos);
-    localStorage.setItem("salários", JSON.stringify(salários));
-    atualizarSalários(); alert(`Salários copiados de ${mesRef} para ${mesAtual}.`);
-  }
-
-  // === MODAL DESPESA (BOTTOM-SHEET) ===
-  function abrirModalDespesa() {
-    document.getElementById("modalDespesa").classList.remove("oculto");
-    páginaAtualDespesa = 1;
-    atualizarDespesas();
-  }
-  function fecharModalDespesa() {
-    document.getElementById("modalDespesa").classList.add("oculto");
-    ativarSecao('resumo');
-    atualizarResumo();
-  }
-  function atualizarDespesas() {
-    const lista = document.getElementById("listaDespesas");
-    lista.innerHTML = "";
-    despesas.sort((a, b) => b.valor - a.valor);
-    const totalPáginas = Math.ceil(despesas.length / ítensPorPáginaDespesa) || 1;
-    if (páginaAtualDespesa > totalPáginas) páginaAtualDespesa = totalPáginas;
-    if (páginaAtualDespesa < 1) páginaAtualDespesa = 1;
-    const início = (páginaAtualDespesa - 1) * ítensPorPáginaDespesa;
-    const fim = início + ítensPorPáginaDespesa;
-    const itens = despesas.slice(início, fim);
-    itens.forEach((item, idx) => {
-      const linha = document.createElement("div");
-      linha.classList.add("expense-grid");
-      linha.innerHTML = `
-        <span>${item.descricao}</span>
-        <span>${item.tipo}</span>
-        <span>R$ ${item.valor.toFixed(2).replace('.', ',')}</span>
-        <button class="btn-icon" onclick="removerDespesa(${início + idx})">✖</button>
-      `;
-      lista.appendChild(linha);
-    });
-    document.getElementById("prevDespesa").disabled = (páginaAtualDespesa === 1);
-    document.getElementById("nextDespesa").disabled = (páginaAtualDespesa === totalPáginas);
-  }
-  function mudarPáginaDespesa(delta) { páginaAtualDespesa += delta; atualizarDespesas(); }
-  function salvarDespesa() {
-    const desc = document.getElementById("descricaoDespesa").value;
-    const tipo = document.getElementById("tipoDespesa").value;
-    const valor = parseFloat(document.getElementById("valorDespesa").value);
-    if (!desc || isNaN(valor)) return alert("Preencha todos os campos.");
-    const { ano, mesNúmero } = mêsCorrente();
-    const mesAnoAtual = `${ano}-${mesNúmero}`;
-    despesas.push({ descricao: desc, tipo, valor, mesAno: mesAnoAtual });
-    localStorage.setItem("despesas", JSON.stringify(despesas));
-    document.getElementById("descricaoDespesa").value = "";
-    atualizarDespesas();
-  }
-  function removerDespesa(index) {
-    despesas.splice(index, 1);
-    localStorage.setItem("despesas", JSON.stringify(despesas));
-    atualizarDespesas();
-  }
-
-  // === MODAL BACKUP (BOTTOM-SHEET) ===
-  function abrirModalBackup() {
-    document.getElementById("modalBackup").classList.remove("oculto");
-  }
-  function fecharModalBackup() {
-    document.getElementById("modalBackup").classList.add("oculto");
-    ativarSecao('resumo');
-  }
-  function gerarBackup() {
-    document.getElementById("campoBackup").value = JSON.stringify({ salários, despesas }, null, 2);
-  }
-  function restaurarBackup() {
-    try {
-      const data = JSON.parse(document.getElementById("campoBackup").value);
-      salários = data.salários || [];
-      despesas = data.despesas || [];
-      localStorage.setItem("salários", JSON.stringify(salários));
-      localStorage.setItem("despesas", JSON.stringify(despesas));
-      atualizarSalários();
-      atualizarDespesas();
-      atualizarResumo();
-      alert("Backup restaurado!");
-    } catch {
-      alert("JSON inválido.");
-    }
-  }
-
-  // Exibe o resumo ao carregar
-  ativarSecao('resumo');
-  atualizarResumo();
-</script>
-</body>
+  </body>
 </html>
