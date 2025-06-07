@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
     <link
       rel="stylesheet"
@@ -12,15 +14,29 @@
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+      @media (max-width: 640px) {
+        .card-container {
+          flex-direction: column;
+        }
+        .card {
+          min-width: 100% !important;
+        }
+        .spending-chart {
+          min-width: 100% !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <div
       class="relative flex size-full min-h-screen flex-col bg-[#121416] dark justify-between group/design-root overflow-x-hidden"
       style='font-family: Inter, "Noto Sans", sans-serif;'
     >
-      <div>
-        <div class="flex items-center bg-[#121416] p-4 pb-2 justify-between">
-          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12">Overview</h2>
+      <div class="pb-4">
+        <!-- Header -->
+        <div class="flex items-center bg-[#121416] p-4 pb-2 justify-between sticky top-0 z-10">
+          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center md:pl-12">Overview</h2>
           <div class="flex w-12 items-center justify-end">
             <button
               class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
@@ -35,43 +51,57 @@
             </button>
           </div>
         </div>
-        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Current Balance</h3>
-        <h1 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">$12,345.67</h1>
-        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">This Month</h3>
-        <div class="flex flex-wrap gap-4 p-4">
-          <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035]">
-            <p class="text-white text-base font-medium leading-normal">Income</p>
-            <p class="text-white tracking-light text-2xl font-bold leading-tight">$2,500.00</p>
-            <p class="text-[#0bda5e] text-base font-medium leading-normal">+10%</p>
-          </div>
-          <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035]">
-            <p class="text-white text-base font-medium leading-normal">Expenses</p>
-            <p class="text-white tracking-light text-2xl font-bold leading-tight">$1,800.00</p>
-            <p class="text-[#fa6238] text-base font-medium leading-normal">-5%</p>
+        
+        <!-- Current Balance -->
+        <div class="px-4">
+          <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Current Balance</h3>
+          <h1 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">$12,345.67</h1>
+        </div>
+        
+        <!-- This Month -->
+        <div class="px-4">
+          <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">This Month</h3>
+          <div class="flex flex-wrap gap-4 card-container">
+            <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035] card">
+              <p class="text-white text-base font-medium leading-normal">Income</p>
+              <p class="text-white tracking-light text-2xl font-bold leading-tight">$2,500.00</p>
+              <p class="text-[#0bda5e] text-base font-medium leading-normal">+10%</p>
+            </div>
+            <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-[#2c3035] card">
+              <p class="text-white text-base font-medium leading-normal">Expenses</p>
+              <p class="text-white tracking-light text-2xl font-bold leading-tight">$1,800.00</p>
+              <p class="text-[#fa6238] text-base font-medium leading-normal">-5%</p>
+            </div>
           </div>
         </div>
-        <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Spending by Category</h3>
-        <div class="flex flex-wrap gap-4 px-4 py-6">
-          <div class="flex min-w-72 flex-1 flex-col gap-2">
-            <p class="text-white text-base font-medium leading-normal">Spending</p>
-            <p class="text-white tracking-light text-[32px] font-bold leading-tight truncate">$1,800</p>
-            <p class="text-[#a2aab3] text-base font-normal leading-normal">This Month</p>
-            <div class="grid min-h-[180px] gap-x-4 gap-y-6 grid-cols-[auto_1fr] items-center py-3">
-              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Food</p>
-              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
-              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Transportation</p>
-              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 40%;"></div></div>
-              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Entertainment</p>
-              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 30%;"></div></div>
-              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Bills</p>
-              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
-              <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Others</p>
-              <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 60%;"></div></div>
+        
+        <!-- Spending by Category -->
+        <div class="px-4">
+          <h3 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Spending by Category</h3>
+          <div class="flex flex-wrap gap-4 py-6">
+            <div class="flex min-w-full flex-1 flex-col gap-2 spending-chart">
+              <p class="text-white text-base font-medium leading-normal">Spending</p>
+              <p class="text-white tracking-light text-[32px] font-bold leading-tight truncate">$1,800</p>
+              <p class="text-[#a2aab3] text-base font-normal leading-normal">This Month</p>
+              <div class="grid min-h-[180px] gap-x-4 gap-y-6 grid-cols-[auto_1fr] items-center py-3">
+                <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Food</p>
+                <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
+                <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Transportation</p>
+                <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 40%;"></div></div>
+                <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Entertainment</p>
+                <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 30%;"></div></div>
+                <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Bills</p>
+                <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 10%;"></div></div>
+                <p class="text-[#a2aab3] text-[13px] font-bold leading-normal tracking-[0.015em]">Others</p>
+                <div class="h-full flex-1"><div class="border-[#a2aab3] bg-[#2c3035] border-r-2 h-full" style="width: 60%;"></div></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div>
+      
+      <!-- Bottom Navigation -->
+      <div class="sticky bottom-0 z-10">
         <div class="flex gap-2 border-t border-[#2c3035] bg-[#1e2124] px-4 pb-3 pt-2">
           <a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
             <div class="text-white flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="fill">
